@@ -13,19 +13,11 @@ import org.ivartj.args.Help;
 public class TestUsage 
     extends TestCase
 {
-	/**
-	* Create the test case
-	*
-	* @param testName name of the test case
-	*/
 	public TestUsage( String testName )
 	{
 		super( testName );
 	}
 
-	/**
-	* @return the suite of tests being tested
-	*/
 	public static Test suite()
 	{
 		return new TestSuite( TestUsage.class );
@@ -97,6 +89,4 @@ public class TestUsage
 		assert(config);
 
 	}
-
-	
 }
