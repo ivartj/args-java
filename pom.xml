@@ -6,7 +6,12 @@
   <packaging>jar</packaging>
   <version>1.0-SNAPSHOT</version>
   <name>args</name>
-  <url>http://maven.apache.org</url>
+
+<!--
+  TODO: Website is not made.
+  <url>http://args.ivartj.org</url>
+-->
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>

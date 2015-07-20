@@ -4,23 +4,43 @@ import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
+/**
+ * A Lexer instance processes an array of command-line arguments, breaking them
+ * down into more easily manageable tokens.
+ */
 public class Lexer {
 	private int index = 0;
 	private int offset = 0;
 	private boolean noMoreOptions = false;
 	private String args[];
-	private Pattern caseBregex = Pattern.compile("^-[-a-zA-Z]+=");
-	private Pattern caseCregex = Pattern.compile("^--[-a-zA-Z]+$");
-	private Pattern caseDregex = Pattern.compile("^-[a-zA-Z]+$");
 
+	private static Pattern caseBregex = Pattern.compile("^-[-a-zA-Z]+=");
+	private static Pattern caseCregex = Pattern.compile("^--[-a-zA-Z]+$");
+	private static Pattern caseDregex = Pattern.compile("^-[a-zA-Z]+$");
+
+	/**
+	 * @param args          Command-line arguments to process.
+	 */
 	public Lexer(String args[]) {
 		this.args = args;
 	}
 
+	/**
+	 * @param token         String to check whether is an option.
+	 *                      Typically a token returned from {@link #next()}.
+	 *
+	 * @return              Whether the given String appears to be an option.
+	 */
 	public static boolean isOption(String token) {
 		return token.startsWith("-") && token.length() > 1;
 	}
 
+	/**
+	 * Returns whether there are more arguments to process.
+	 *
+	 * @return The return value corresponds to whether {@link #next()} will
+	 *         have more tokens to offer.
+	 */
 	public boolean hasNext() {
 		if(index == args.length)
 			return false;
@@ -33,6 +53,17 @@ public class Lexer {
 		return index != args.length;
 	}
 
+	/**
+	 * Returns the next token of the broken-down arguments.
+	 *
+	 * @return This is either a positional argument (non-option), or an
+	 *         option. If the returned option takes a parameter, call
+	 *         {@link #expectParameterTo(String)} afterwards.
+	 *
+	 * @throws InvalidOptionException If the lexer encountered an option in
+	 *                                a format not expected by this
+	 *                                implementation.
+	 */
 	public String next() throws InvalidOptionException {
 		if(!hasNext())
 			return null;
@@ -87,6 +118,15 @@ public class Lexer {
 		throw new InvalidOptionException(args[index]);
 	}
 
+	/**
+	 * Processes the next token from the arguments as a parameter to the
+	 * previous token.
+	 *
+	 * @param toFlag                     The flag to which the parameter is
+	 *                                   expected. 
+	 * @return                           The next token.
+	 * @throws MissingParameterException If no parameter was found.
+	 */
 	public String expectParameterTo(String toFlag) throws MissingParameterException {
 
 		if(index == args.length)

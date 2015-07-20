@@ -3,17 +3,32 @@ package org.ivartj.args;
 import java.io.PrintStream;
 import java.util.ArrayList;
 
+/**
+ * Convenience class for producing conventional help output given a --help or
+ * -h argument option.
+ */
 public class Help {
 
-	ArrayList<Object> elements = new ArrayList<Object>();
+	private ArrayList<Object> elements = new ArrayList<Object>();
 
 	public Help() {
 	}
 
+	/**
+	 * Prints the prepared help message.
+	 *
+	 * @param out  The output to which to print the help message.
+	 */
 	public void print(PrintStream out) {
 		out.print(this);
 	}
 
+	/**
+	 * The String representation of this class is also the prepared help
+	 * message.
+	 *
+	 * @return The prepared help message.
+	 */
 	public String toString() {
 		Class lastClass = null;
 		StringBuilder sb = new StringBuilder();
@@ -31,6 +46,22 @@ public class Help {
 		return sb.toString();
 	}
 
+	/**
+	 * Adds a usage line.
+	 * <p>
+	 * Consecutive calls causes the subsequent usage lines to take an
+	 * alternate form:
+	 * <pre>
+	 *   help.usage("program INPUT");
+	 *   help.usage("program INPUT OUTPUT");
+	 *
+	 *   Usage: program INPUT
+	 *      or: program INPUT OUTPUT
+	 * </pre>
+	 *
+	 * @param usage  Usage string.
+	 * @return       The Help instance on which this was called.
+	 */
 	public Help usage(String usage) {
 		if(elements.size() == 0 || elements.get(elements.size() - 1).getClass() != Usage.class)
 			elements.add(new Usage("Usage: ", usage));
@@ -53,10 +84,24 @@ public class Help {
 		}
 	}
 
+	/**
+	 * Wraps text so that lines do not exceed 80 characters.
+	 *
+	 * @param text   Text to be wrapped.
+	 * @return       The Help instance on which this was called.
+	 */
 	public Help wrap(String text) {
 		return wrap("", text);
 	}
 
+	/**
+	 * Wraps text so that lines do not exceed 80 characters, and with the
+	 * given indentation.
+	 *
+	 * @param indentation Indentation (typically a series of spaces).
+	 * @param text        Text to be wrapped.
+	 * @return            The Help instance on which this was called.
+	 */
 	public Help wrap(String indentation, String text) {
 		elements.add(new Wrap(0, indentation, text));
 		return this;
@@ -78,9 +123,10 @@ public class Help {
 		}
 	}
 	
+	private static final int MAX_LINE_LENGTH = 80;
+
 	private static String wrapText(int off, String indentation, String text) {
 		String ind = indentation;
-		final int MAX_LINE_LENGTH = 80;
 		StringBuilder sb = new StringBuilder();
 
 		
@@ -116,12 +162,21 @@ public class Help {
 		return sb.toString();
 	}
 
-	String commonOptionHelpIndent = "";
+	private final static int MAX_INDENTATION = 20;
 
+	private String commonOptionHelpIndent = "";
+
+	/**
+	 * Adds documentation for an option in the help message. 
+	 *
+	 * @param usage        Typically in the form "-o, --output=FILE"
+	 * @param description  Description of the option.
+	 * @return             The Help instance on which this was called.
+	 */
 	public Help option(String usage, String description) {
 
 		int helpOffset = ("  " + usage + " ").length();
-		if(helpOffset > commonOptionHelpIndent.length())
+		if(helpOffset > commonOptionHelpIndent.length() && helpOffset <= MAX_INDENTATION)
 			for(int i = commonOptionHelpIndent.length(); i < helpOffset; i++)
 				commonOptionHelpIndent += " ";
 
@@ -149,6 +204,15 @@ public class Help {
 		}
 	}
 
+	/**
+	 * Adds a header in the help message.
+	 * <p>
+	 * According to typographical convention, this element is followed by a
+	 * only single line break.
+	 *
+	 * @param header       The header string.
+	 * @return             The Help instance on which this was called.
+	 */
 	public Help header(String header) {
 		elements.add(new Header(header));
 		return this;

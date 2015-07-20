@@ -38,6 +38,8 @@ public class TestUsage
 		.option("-h, --help",         "Prints help message.")
 		.option("--version",          "Prints version.")
 		.option("-o, --output=FILE",  "Specifies output file.")
+		.option("-c, --config=CONFIGURATION",
+		                              "Specifies output file.")
 
 		.print(System.out);
 	}
