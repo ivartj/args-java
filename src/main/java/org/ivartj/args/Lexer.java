@@ -15,9 +15,9 @@ public class Lexer {
 	private String args[];
 	private String previousToken = null;
 
-	private static Pattern caseBregex = Pattern.compile("^-[-a-zA-Z]+=");
-	private static Pattern caseCregex = Pattern.compile("^--[-a-zA-Z]+$");
-	private static Pattern caseDregex = Pattern.compile("^-[a-zA-Z]+$");
+	private static Pattern caseBregex = Pattern.compile("^-[-a-zA-Z0-9]+=");
+	private static Pattern caseCregex = Pattern.compile("^--[-a-zA-Z0-9]+$");
+	private static Pattern caseDregex = Pattern.compile("^-[a-zA-Z0-9]+$");
 
 	/**
 	 * @param args          Command-line arguments to process.
