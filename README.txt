@@ -1,4 +1,5 @@
-Trivial argument processing library for Java.
+Trivial argument processing library for Java. Motivated in part by Apache
+Commons' deprecation of their GNU-style argument parser.
 
 To include in a Maven pom.xml:
 
@@ -29,7 +30,9 @@ Javadocs can be produced by running:
     mvn javadoc:javadoc
 
 Which will place Javadoc documentation in:
+
   ./target/site/apidocs/
 
 Example of intended usage can also be found in:
+
   ./src/test/java/org/ivartj/args/TestUsage.java

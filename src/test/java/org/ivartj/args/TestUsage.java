@@ -66,13 +66,15 @@ public class TestUsage
 			case "--version":
 				version = true;
 				break;
+			case "-o":
 			case "--output":
-				String filename = lex.expectParameterTo("--output");
+				String filename = lex.expectParameter();
 				assert(filename.equals("file"));
 				output = true;
 				break;
+			case "-c":
 			case "--config":
-				String settings = lex.expectParameterTo("--config");
+				String settings = lex.expectParameter();
 				assert(settings.equals("settings.cfg"));
 				config = true;
 				break;

@@ -13,6 +13,7 @@ public class Lexer {
 	private int offset = 0;
 	private boolean noMoreOptions = false;
 	private String args[];
+	private String previousToken = null;
 
 	private static Pattern caseBregex = Pattern.compile("^-[-a-zA-Z]+=");
 	private static Pattern caseCregex = Pattern.compile("^--[-a-zA-Z]+$");
@@ -65,6 +66,12 @@ public class Lexer {
 	 *                                implementation.
 	 */
 	public String next() throws InvalidOptionException {
+		String token = nextInternal();
+		previousToken = token;
+		return token;
+	}
+
+	private String nextInternal() throws InvalidOptionException {
 		if(!hasNext())
 			return null;
 
@@ -122,15 +129,12 @@ public class Lexer {
 	 * Processes the next token from the arguments as a parameter to the
 	 * previous token.
 	 *
-	 * @param toFlag                     The flag to which the parameter is
-	 *                                   expected. 
 	 * @return                           The next token.
 	 * @throws MissingParameterException If no parameter was found.
 	 */
-	public String expectParameterTo(String toFlag) throws MissingParameterException {
-
+	public String expectParameter() throws MissingParameterException {
 		if(index == args.length)
-			throw new MissingParameterException(toFlag);
+			throw new MissingParameterException(previousToken);
 
 		// CASE: Plain argument as parameter
 		if(offset == 0 && !isOption(args[index])) {
@@ -154,6 +158,22 @@ public class Lexer {
 			return value;
 		}
 
-		throw new MissingParameterException(toFlag);
+		throw new MissingParameterException(previousToken);
+	}
+
+	/**
+	 * @deprecated
+	 * Processes the next token from the arguments as a parameter to the
+	 * given flag.
+	 *
+	 * @param toFlag                     The flag to which the parameter is
+	 *                                   expected. 
+	 * @return                           The next token.
+	 * @throws MissingParameterException If no parameter was found.
+	 */
+	@Deprecated
+	public String expectParameterTo(String toFlag) throws MissingParameterException {
+		previousToken = toFlag;
+		return expectParameter();
 	}
 }
