@@ -5,6 +5,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.ivartj.args.Lexer;
+import org.ivartj.args.ArgumentException;
 import org.ivartj.args.Help;
 
 /**
@@ -44,7 +45,7 @@ public class TestUsage
 		.print(System.out);
 	}
 
-	public static void testLexerUsage() throws Exception {
+	public static void testLexerUsage() {
 		String args[] = { "-h", "--version", "--output=file", "positional", "--config", "settings.cfg" };
 		Lexer lex = new Lexer(args);
 
@@ -55,6 +56,7 @@ public class TestUsage
 			positional = false;
 
 		while(lex.hasNext()) {
+		try {
 			String token = lex.next();
 
 			if(lex.isOption(token))
@@ -79,12 +81,15 @@ public class TestUsage
 				config = true;
 				break;
 			default:
-				throw new Exception("Unexpected option " + token);
+				throw new ArgumentException("Unexpected option " + token);
 			} else {
 				assert(token.equals("positional"));
 				positional = true;
 			}
-		}
+		} catch(ArgumentException e) {
+			System.err.println("Error occurred when processing arguments:\n\t" + e.getMessage() + "\n");
+			assert(false);
+		} /* try */ }
 
 		assert(help);
 		assert(version);
