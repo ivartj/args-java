@@ -7,6 +7,60 @@ import java.util.regex.Matcher;
 /**
  * A Lexer instance processes an array of command-line arguments, breaking them
  * down into more easily manageable tokens.
+ * <p>
+ * After checking {@link #hasNext()}, options and positional arguments are returned by
+ * calling {@link #next()}, and are distinguished by calling {@link
+ * #isOption(String)}; parameter tokens are returned from {@link
+ * #expectParameter()} after receiving an option that takes a parameter.
+ * <p>
+ * The argument lexer expects arguments in the following forms:
+ * <table summary="Argument forms">
+ *  <tr>
+ *    <th>Argument</th>
+ *    <th>Tokens</th>
+ *  </tr>
+ *  <tr>
+ *    <td><code>-h</code></td>
+ *    <td><code>"-h"</code></td>
+ *    <td>(short option)</td>
+ *  </tr>
+ *  <tr>
+ *    <td><code>--version</code></td>
+ *    <td><code>"--version"</code></td>
+ *    <td>(long option)</td>
+ *  </tr>
+ *  <tr>
+ *    <td>
+ *      <code>--output filename</code><br>
+ *      <code>--output=filename</code>
+ *    </td>
+ *    <td><code>"--output" "filename"</code><br>
+ *    <td>(long option with parameter)</td>
+ *  </tr>
+ *  <tr>
+ *    <td>
+ *      <code>-i input</code><br>
+ *      <code>-i=input</code>
+ *    </td>
+ *    <td><code>"-i" "input"</code></td>
+ *    <td>(short option with parameter)</td>
+ *  </tr>
+ *  <tr>
+ *    <td><code>-abc</code></td>
+ *    <td><code>"-a" "-b" "-c"</code></td>
+ *    <td>(a collection short options)</td>
+ *  </tr>
+ *  <tr>
+ *    <td><code>-Dparameter</code></td>
+ *    <td><code>"-D" "parameter"</code></td>
+ *    <td>(when calling {@link #expectParameter()} after <code>"-D"</code>)</td>
+ *  </tr>
+ *  <tr>
+ *    <td><code>--</code></td>
+ *    <td><code>(none)</code></td>
+ *    <td>(this causes the next arguments to be regarded as non-options by {@link #isOption(String)})</td>
+ *  </tr>
+ * </table>
  */
 public class Lexer {
 	private int index = 0;
@@ -28,7 +82,7 @@ public class Lexer {
 
 	/**
 	 * Returns whether the given token is an option.
-	 *
+	 * <p>
 	 * This depends on whether an "--" argument has been encountered, which
 	 * in Unix covention marks the end of options. An "--" argument is not
 	 * returned by the lexer, but all subsequent arguments are regarded as
