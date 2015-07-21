@@ -18,8 +18,7 @@ To include in a Maven pom.xml:
         <dependency>
 	  <groupId>org.ivartj.args</groupId>
 	  <artifactId>args</artifactId>
-	  <!-- TODO: Select a version -->
-	  <!-- <version>1.0-SNAPSHOT</version> -->
+	  <version>1.0</version>
 	</dependency>
       </dependencies>
       ...
