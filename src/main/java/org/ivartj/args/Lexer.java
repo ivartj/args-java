@@ -15,9 +15,9 @@ public class Lexer {
 	private String args[];
 	private String previousToken = null;
 
-	private static Pattern caseBregex = Pattern.compile("^-[-a-zA-Z0-9]+=");
+	private static Pattern caseBregex = Pattern.compile("^--[-a-zA-Z0-9]+=");
 	private static Pattern caseCregex = Pattern.compile("^--[-a-zA-Z0-9]+$");
-	private static Pattern caseDregex = Pattern.compile("^-[a-zA-Z0-9]+$");
+	private static Pattern caseDregex = Pattern.compile("^-[a-zA-Z0-9]+");
 
 	/**
 	 * @param args          Command-line arguments to process.
@@ -84,16 +84,13 @@ public class Lexer {
 		}
 
 
-		// CASE B: Option with parameter.
+		// CASE B: Long option with parameter.
 		//
 		// args[index] = --long=parameter
 		// offset      = ^
-		//
-		// args[index] = -o=parameter
-		// offset      = ^
 		if(caseBregex.matcher(args[index]).lookingAt() && offset == 0) {
-			offset = args[index].indexOf("=") + 1;
-			return args[index].substring(0, args[index].indexOf("="));
+			offset = args[index].indexOf("=");
+			return args[index].substring(0, offset);
 		}
 
 
@@ -110,6 +107,12 @@ public class Lexer {
 		// 
 		// args[index] = -abc
 		// offset      = ^^^^
+		//
+		// args[index] = -Dparameter
+		// offset      = ^
+		//
+		// args[index] = -o=parameter
+		// offset      = ^
 		if(caseDregex.matcher(args[index]).lookingAt()) {
 			if(offset == 0)
 				offset++;
@@ -144,14 +147,25 @@ public class Lexer {
 		// CASE: Parameter after equal sign to long parameter
 		//
 		// args[index] = --long=parameter
-		// offset      = ~~~~~~~^
+		// offset      = ~~~~~~^
 		//
 		// args[index] = -o=parameter
-		// offset      = ~~~^
+		// offset      = ~~^
 		//
 		// args[index] = -abc=parameter
-		// offset      = ~~~~~^
-		if(caseBregex.matcher(args[index]).lookingAt() && offset == args[index].indexOf('=') + 1) {
+		// offset      = ~~~~^
+		if(offset == args[index].indexOf('=')) {
+			String value = args[index].substring(offset + 1);
+			index++;
+			offset = 0;
+			return value;
+		}
+
+		// CASE: Short option with parameter in same argument
+		//
+		// args[index] = -Dparameter
+		// offset      = ~~^
+		if(caseDregex.matcher(args[index]).lookingAt() && offset == 2) {
 			String value = args[index].substring(offset);
 			index++;
 			offset = 0;

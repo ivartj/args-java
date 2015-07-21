@@ -1,4 +1,4 @@
-package org.ivartj.args;
+package org.ivartj.args.v1d0;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -39,37 +39,20 @@ public class TestUsage
 		.option("-h, --help",         "Prints help message.")
 		.option("--version",          "Prints version.")
 		.option("-o, --output=FILE",  "Specifies output file.")
-		.option("-i, --input=FILE",   "Specifies input file.")
 		.option("-c, --config=CONFIGURATION",
 		                              "Specifies output file.")
-		.option("-d, --output-directory=DIRECTORY",
-		                              "Specifies output directory.")
-		.option("-Ddefinition",       "Adds a definition.")
 
 		.print(System.out);
 	}
 
 	public static void testLexerUsage() {
-		String args[] = {
-			"-h",
-			"--version",
-			"--output=file",
-			"-i=input",
-			"positional",
-			"--config", "settings.cfg",
-			"-d", "output-directory",
-			"-DPACKAGE_VERSION=\"1.0\""
-		};
-
+		String args[] = { "-h", "--version", "--output=file", "positional", "--config", "settings.cfg" };
 		Lexer lex = new Lexer(args);
 
 		boolean help = false,
 			version = false,
 			output = false,
-			input = false,
-			outputDirectory = false,
 			config = false,
-			definition = false,
 			positional = false;
 
 		while(lex.hasNext()) {
@@ -87,37 +70,15 @@ public class TestUsage
 				break;
 			case "-o":
 			case "--output":
-				String file = lex.expectParameter();
-				System.out.printf("file = %s\n", file);
-				assert(file.equals("file"));
+				String filename = lex.expectParameter();
+				assert(filename.equals("file"));
 				output = true;
-				break;
-			case "-i":
-			case "--input":
-				String inputParameter = lex.expectParameter();
-				System.out.printf("input = %s\n", inputParameter);
-				assert(inputParameter.equals("input"));
-				input = true;
 				break;
 			case "-c":
 			case "--config":
 				String settings = lex.expectParameter();
-				System.out.printf("settings.cfg = %s\n", settings);
 				assert(settings.equals("settings.cfg"));
 				config = true;
-				break;
-			case "-d":
-			case "--output-directory":
-				String outputDirectoryParameter = lex.expectParameter();
-				System.out.printf("output-directory = %s\n", outputDirectoryParameter);
-				assert(outputDirectoryParameter.equals("output-directory"));
-				outputDirectory = true;
-				break;
-			case "-D":
-				String definitionParameter = lex.expectParameter();
-				System.out.printf("PACKAGE_VERSION=\"1.0\" = %s\n", definitionParameter);
-				assert(definitionParameter.equals("PACKAGE_VERSION=\"1.0\""));
-				definition = true;
 				break;
 			default:
 				throw new ArgumentException("Unexpected option " + token);
@@ -133,10 +94,8 @@ public class TestUsage
 		assert(help);
 		assert(version);
 		assert(output);
-		assert(input);
-		assert(outputDirectory);
-		assert(definition);
 		assert(positional);
 		assert(config);
+
 	}
 }
