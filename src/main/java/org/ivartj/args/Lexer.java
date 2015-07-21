@@ -27,12 +27,21 @@ public class Lexer {
 	}
 
 	/**
+	 * Returns whether the given token is an option.
+	 *
+	 * This depends on whether an "--" argument has been encountered, which
+	 * in Unix covention marks the end of options. An "--" argument is not
+	 * returned by the lexer, but all subsequent arguments are regarded as
+	 * non-options by this method.
+	 *
 	 * @param token         String to check whether is an option.
 	 *                      Typically a token returned from {@link #next()}.
 	 *
 	 * @return              Whether the given String appears to be an option.
 	 */
-	public static boolean isOption(String token) {
+	public boolean isOption(String token) {
+		if(noMoreOptions)
+			return false;
 		return token.startsWith("-") && token.length() > 1;
 	}
 

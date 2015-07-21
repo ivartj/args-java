@@ -55,11 +55,16 @@ public class TestUsage
 			"--version",
 			"--output=file",
 			"-i=input",
-			"positional",
+			"positional1",
 			"--config", "settings.cfg",
 			"-d", "output-directory",
-			"-DPACKAGE_VERSION=\"1.0\""
+			"-DPACKAGE_VERSION=\"1.0\"",
+			"--",
+			"positional2",
+			"positional3"
 		};
+
+		int positional = 0;
 
 		Lexer lex = new Lexer(args);
 
@@ -69,8 +74,7 @@ public class TestUsage
 			input = false,
 			outputDirectory = false,
 			config = false,
-			definition = false,
-			positional = false;
+			definition = false;
 
 		while(lex.hasNext()) {
 		try {
@@ -122,8 +126,9 @@ public class TestUsage
 			default:
 				throw new ArgumentException("Unexpected option " + token);
 			} else {
-				assert(token.equals("positional"));
-				positional = true;
+				positional++;
+				System.out.printf("positional%d = %s\n", positional, token);
+				assert(token.equals("positional" + positional));
 			}
 		} catch(ArgumentException e) {
 			System.err.println("Error occurred when processing arguments:\n\t" + e.getMessage() + "\n");
@@ -136,7 +141,7 @@ public class TestUsage
 		assert(input);
 		assert(outputDirectory);
 		assert(definition);
-		assert(positional);
 		assert(config);
+		assert(positional == 3);
 	}
 }
