@@ -34,6 +34,9 @@ public class TestUsage
 		+      "Handles invitations to channels. By default it reads "
 		+      "settings from ./settings.properties."
 		)
+		.pg("  "
+		+      "This is another paragraph. "
+		)
 
 		.header("OPTIONS")
 		.option("-h, --help",         "Prints help message.")

@@ -35,7 +35,7 @@ public class Help {
 
 		for(Object el : elements) {
 			if(lastClass != null)
-			if(el.getClass() != lastClass && lastClass != Header.class)
+			if(lastClass == Wrap.class || (el.getClass() != lastClass && lastClass != Header.class))
 				sb.append('\n');
 			sb.append(el);
 			lastClass = el.getClass();
