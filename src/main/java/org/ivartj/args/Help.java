@@ -107,6 +107,27 @@ public class Help {
 		return this;
 	}
 
+	/**
+	 * Like {@link #wrap(String,String)}, except that indentation is given
+	 * by spaces at the start of the text parameter.
+	 *
+	 * @param text        Text which optionally starts with some
+	 *                    spaces, which will be used as indentation
+	 *                    when wrapping it.
+	 * @return            The Help instance on which this was called.
+	 */
+	public Help pg(String text) {
+		int i;
+
+		for(i = 0; i < text.length(); i++)
+			if(text.charAt(i) != ' ')
+				break;
+
+		String indentation = text.substring(0, i);
+		text = text.substring(i);
+		return wrap(indentation, text);
+	}
+
 	private static class Wrap {
 		String indentation;
 		String text;
@@ -135,29 +156,33 @@ public class Help {
 			off = 0;
 		}
 
-		sb.append(ind.substring(off));
-		off = ind.length();
 
 		boolean newline = true;
-		for(String word : text.split(" ")) {
-			String outword = word;
+		for(String line : text.split("\n")) {
+			sb.append(ind.substring(off));
+			off = ind.length();
+			for(String word : line.split(" ")) {
+				String outword = word;
 
-			if(!newline)
-				outword = " " + word;
+				if(!newline)
+					outword = " " + word;
 
-			off += outword.length();
-			if(off > MAX_LINE_LENGTH) {
-				sb.append('\n');
-				sb.append(ind);
-				outword = word;
-				off = (ind + outword).length();
-			} 
+				off += outword.length();
+				if(off > MAX_LINE_LENGTH) {
+					sb.append('\n');
+					sb.append(ind);
+					outword = word;
+					off = (ind + outword).length();
+				} 
 
-			sb.append(outword);
-			newline = false;
+				sb.append(outword);
+				newline = false;
+			}
+			sb.append('\n');
+			off = 0;
+			newline = true;
 		}
 
-		sb.append('\n');
 
 		return sb.toString();
 	}

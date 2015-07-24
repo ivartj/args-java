@@ -30,9 +30,9 @@ public class TestUsage
 		.usage("inviteBot [OPTION]... CONFIGURATION-FILE")
 
 		.header("DESCRIPTION")
-		.wrap("  ", ""
-		+ 	"Handles invitations to channels. By default it reads "
-		+ 	"settings from ./settings.properties."
+		.pg("  "
+		+      "Handles invitations to channels. By default it reads "
+		+      "settings from ./settings.properties."
 		)
 
 		.header("OPTIONS")
@@ -44,7 +44,8 @@ public class TestUsage
 		                              "Specifies output file.")
 		.option("-d, --output-directory=DIRECTORY",
 		                              "Specifies output directory.")
-		.option("-Ddefinition",       "Adds a definition.")
+		.option("-Ddefinition",       "Adds a definition.\n"
+		                            + "Definitions are in the form DEFINITION=VALUE.")
 
 		.print(System.out);
 	}
