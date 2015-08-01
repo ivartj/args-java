@@ -1,0 +1,10 @@
+Ideas for version 2.0 include:
+
+ * Renaming classes so that they all have an Args prefix to prevent namespace
+   collisions. As I have programmed a lot of Go before I didn't realise the
+   need for it. 
+
+ * Renaming Lexer to (Args)Tokenizer. This is more correct because unlike a
+   lexeme, a token includes its token type, which is accessible through the
+   current Lexer class.
+
