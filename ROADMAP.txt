@@ -6,5 +6,11 @@ Ideas for version 2.0 include:
 
  * Renaming Lexer to (Args)Tokenizer. This is more correct because unlike a
    lexeme, a token includes its token type, which is accessible through the
-   current Lexer class.
+   current Lexer class. Alternatively ArgsContext to avoid any potentially
+   incorrect use of terms.
+
+ * Have a different interface for the Lexer.isOption(String) functionality. The
+   string parameter can be removed in place of a private Lexer instance member.
+   isOption depends on state anyway (due to arguments after an "--" argument
+   being interpreted differently).
 
