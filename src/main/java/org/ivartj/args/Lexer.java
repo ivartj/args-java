@@ -84,7 +84,7 @@ public class Lexer {
 	 * Returns whether the given token is an option.
 	 * <p>
 	 * This depends on whether an "--" argument has been encountered, which
-	 * in Unix covention marks the end of options. An "--" argument is not
+	 * in Unix convention marks the end of options. An "--" argument is not
 	 * returned by the lexer, but all subsequent arguments are regarded as
 	 * non-options by this method.
 	 *
