@@ -14,3 +14,4 @@ Ideas for version 2.0 include:
    isOption depends on state anyway (due to arguments after an "--" argument
    being interpreted differently).
 
+ * Make it possible to output (Args)Help to roff/man page format.
